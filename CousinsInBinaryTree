@@ -1,0 +1,83 @@
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+class Solution {
+    Map<Integer, Node> map = new HashMap<>();
+    
+    public boolean isCousins(TreeNode root, int x, int y) {
+        addNodes(root, 0, 0);
+        
+        Node node1 = map.get(x);
+        Node node2 = map.get(y);
+        
+        return node1.depth == node2.depth && node1.parent != node2.parent;
+    }
+    
+    void addNodes(TreeNode treeNode, int depth, int parent) {
+        if (treeNode == null) 
+            return;
+        
+        Node node = new Node(depth, parent);
+        map.put(treeNode.val, node);
+        
+        addNodes(treeNode.left, depth + 1, treeNode.val);
+        addNodes(treeNode.right, depth + 1, treeNode.val);
+    }
+}
+
+class Node {
+    int depth;
+    int parent;
+    
+    Node(int depth, int parent){
+        this.depth = depth;
+        this.parent = parent;
+    }
+}
+
+/*
+public boolean isCousins(TreeNode root, int x, int y) {
+        return (((level(root,x,0)==level(root,y,0))) && (!isSibling(root,x,y)));
+    }
+    
+    public int level(TreeNode node , int x, int lev){
+        if(node == null)
+            return 0;
+        if(node.val==x)
+            return lev;
+        int l = level(node.left,x,lev+1);
+        if(l!=0)
+            return l;
+        
+        return level(node.right,x,lev+1);
+    }
+    
+    public boolean isSibling(TreeNode node, int a, int b){
+        
+        if(node==null)
+            return false;
+        
+        int x =node.left.val;
+        int y = node.right.val;
+        System.out.println(x);
+        System.out.println(y);
+        return ((x==a && y==b) || 
+                (x==b && y==a) ||
+                (isSibling(node.left,a,b)) ||
+                (isSibling(node.right,a,b)));                  
+                
+    }
+
+*/
