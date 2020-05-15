@@ -1,0 +1,67 @@
+class Trie {
+
+     static final int SIZE=26; // since we are dealing with only alphabets
+    static class TrieNode{
+        TrieNode[] children=new TrieNode[SIZE];
+        boolean isEndOfWord; // to determine the end of the Word
+        // Can be useful while searching
+    }
+    static TrieNode root;
+    /** Initialize your data structure here. */
+     public Trie() {
+        root=new TrieNode(); //intialise the Trie
+    }
+    
+    /** Inserts a word into the trie. */
+    public void insert(String word) {
+        TrieNode curr=root; // Take a temp because we don't want to change the global root
+        int index=0;
+        for(char c:word.toCharArray()){
+            index=c-'a'; // Get the position where to insert
+            if(curr.children[index]==null){ // To see if there is already a character in the Trie 
+               curr.children[index]=new TrieNode();// If not create a new Node and insert the character
+            }
+            curr=curr.children[index]; // Continue to the next node.
+        }
+        curr.isEndOfWord=true; // mark the end so that 
+        //we can know that it is a word and not a prefix
+    }
+    
+    /** Returns if the word is in the trie. */
+    public boolean search(String word) {
+        TrieNode curr=root;
+        int index=0;
+        for(char c:word.toCharArray()){
+            index=c-'a';
+            if(curr.children[index]==null){
+               return false; // This is true because if there is no character in the 
+                // Trie then there is no need to continue.
+            }
+            curr=curr.children[index];
+        }
+        return curr!=null && curr.isEndOfWord; // Check to see if we found the word and not a prefix
+    }
+    
+    /** Returns if there is any word in the trie that starts with the given prefix. */
+    public boolean startsWith(String prefix) {
+        TrieNode curr=root;
+        int index=0;
+        for(char c:prefix.toCharArray()){
+            index=c-'a';
+            if(curr.children[index]==null){
+               return false;
+            }
+            curr=curr.children[index];
+        }
+        return curr!=null; // Same as above but no need to check for the end of Word flag.
+        
+    }
+}
+
+/**
+ * Your Trie object will be instantiated and called as such:
+ * Trie obj = new Trie();
+ * obj.insert(word);
+ * boolean param_2 = obj.search(word);
+ * boolean param_3 = obj.startsWith(prefix);
+ */
