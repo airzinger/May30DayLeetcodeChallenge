@@ -1,0 +1,56 @@
+class Solution {
+    public boolean possibleBipartition(int N, int[][] dislikes) {
+        Node[] nodes = new Node[N+1];
+        for (int i = 1; i <= N; i++)
+            nodes[i] = new Node();
+        
+        for (int[] edge : dislikes) {
+            int from = edge[0];
+            int to = edge[1];
+            
+            nodes[from].addEdge(nodes[to]);
+            nodes[to].addEdge(nodes[from]);
+        }
+        
+        for (int idx = 1; idx <= N; idx++) {
+            if (!nodes[idx].isColored() && !nodes[idx].dfs(Color.BLACK))
+                return false;
+        }
+        
+        return true;
+    }
+    
+    private static enum Color { UNCOLORED, BLACK, WHITE };
+    
+    private static class Node {
+        private Color color;
+        private List<Node> neighbours;
+        
+        public Node() {
+            color = Color.UNCOLORED;
+            this.neighbours = new ArrayList<>();
+        }
+        
+        public boolean isColored() {
+            return this.color != Color.UNCOLORED;
+        }
+        
+        public void addEdge(Node node) {
+            this.neighbours.add(node);
+        }
+        
+        public boolean dfs(Color color) {
+            if (isColored()) {
+                return this.color == color;
+            }
+            
+            this.color = color;
+            for (Node neighbour : neighbours) {
+                if (!neighbour.dfs(color == Color.BLACK ? Color.WHITE : Color.BLACK))
+                    return false;
+            }
+            
+            return true;
+        }
+    }
+}
